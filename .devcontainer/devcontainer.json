@@ -1,0 +1,39 @@
+{
+  "name": "Pepperdine Systems Programming Courses (RISC-V + native)",
+
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "student",
+  "workspaceFolder": "/home/student/work",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/student/work,type=bind,consistency=cached",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",                 // C/C++ language support, IntelliSense
+        "ms-python.python",                   // Python (Data Structures course)
+        "webfreak.debug",                     // native + gdb debugging front-end
+        "github.vscode-pull-request-github",  // PRs + reviews in-editor (collab courses)
+        "zhwu95.riscv",                       // RISC-V Support: assembly syntax + snippets
+        "hm.riscv-venus"                      // RISC-V Venus Simulator (Computer Systems)
+      ],
+      "settings": {
+        // Point C/C++ tooling at the cross-compiler by default. Students switch
+        // to native gcc for the Data Structures course (see note in README).
+        "C_Cpp.default.compilerPath": "/usr/bin/riscv64-linux-gnu-gcc",
+        "C_Cpp.default.cStandard": "c11",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // gdb needs ptrace; SYS_PTRACE keeps native debugging working inside the
+  // container without granting full privilege.
+  "capAdd": ["SYS_PTRACE"],
+  "securityOpt": ["seccomp=unconfined"],
+
+  // Sanity check run once after the container is created.
+  "postCreateCommand": "riscv64-linux-gnu-gcc --version && gcc --version && qemu-riscv64 --version"
+}

@@ -25,15 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # --- QEMU ---
       qemu-user \
       qemu-system-misc \
-    && mkdir -p -m 755 /etc/apt/keyrings \
-    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-         -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-         > /etc/apt/sources.list.d/github-cli.list \
-    && apt-get update && apt-get install -y --no-install-recommends gh \
-    && rm -rf /var/lib/apt/lists/*
-
 # --- GitHub CLI (gh) from GitHub's official apt repository ---
 # gh is not in Debian's default repos, so add GitHub's repo + signing key first.
     && mkdir -p -m 755 /etc/apt/keyrings \
@@ -44,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
          > /etc/apt/sources.list.d/github-cli.list \
     && apt-get update && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Toolchain smoke test: fail the image build loudly if the bare-metal RISC-V
 # compiler is broken or missing. Replaces the incidental build-time check that

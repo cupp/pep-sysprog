@@ -54,6 +54,8 @@ RUN curl -L -o /opt/rars.jar \
       https://github.com/TheThirdOne/rars/releases/download/v1.6/rars1_6.jar
 # --- Non-root user (matches Podman's rootless model; good hygiene under Docker) ---
 RUN useradd -ms /bin/bash student
+RUN mkdir -p /etc/gdb \
+    && echo 'set auto-load safe-path /' >> /etc/gdb/gdbinit
 USER student
 WORKDIR /home/student/work
 
